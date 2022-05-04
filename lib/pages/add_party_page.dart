@@ -3,7 +3,7 @@ import 'package:party_planner_app/models/party.dart';
 import 'package:intl/intl.dart';
 import 'package:party_planner_app/models/partylist.dart';
 import 'package:party_planner_app/storage/local_repo.dart';
-import 'package:party_planner_app/utils/helper_widgets.dart';
+import 'package:party_planner_app/utils/utils.dart';
 
 class AddPartyPage extends StatefulWidget {
   const AddPartyPage({Key? key}) : super(key: key);
@@ -67,6 +67,7 @@ class _AddPartyPageState extends State<AddPartyPage> {
     return Flexible(
       child: TextFormField(
         controller: _dateController,
+        validator: validateFormField,
         readOnly: true,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
@@ -99,6 +100,7 @@ class _AddPartyPageState extends State<AddPartyPage> {
     return Flexible(
       child: TextFormField(
         controller: _timeController,
+        validator: validateFormField,
         readOnly: true,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:party_planner_app/models/partylist.dart';
 import 'package:party_planner_app/storage/local_repo.dart';
 
+import '../models/party.dart';
+
 class PartyOverViewPage extends StatefulWidget {
   const PartyOverViewPage({Key? key}) : super(key: key);
 
@@ -30,9 +32,11 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
     );
   }
 
-  Text buildLoaded(PartyList partyList) {
-    return Text(
-      'Result: $partyList',
+  Widget buildLoaded(PartyList partyList) {
+    return Column(
+      children: [
+        for (Party party in partyList.parties) PartyCard(party: party)
+      ],
     );
   }
 
@@ -50,9 +54,8 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
 }
 
 class PartyCard extends StatefulWidget {
-  const PartyCard({
-    Key? key,
-  }) : super(key: key);
+  final Party party;
+  const PartyCard({Key? key, required this.party}) : super(key: key);
 
   @override
   State<PartyCard> createState() => _PartyCardState();
@@ -61,6 +64,12 @@ class PartyCard extends StatefulWidget {
 class _PartyCardState extends State<PartyCard> {
   @override
   Widget build(BuildContext context) {
-    return const Card();
+    return SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: Card(
+        child: Text(widget.party.partyName),
+      ),
+    );
   }
 }

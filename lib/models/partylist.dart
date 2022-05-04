@@ -13,6 +13,7 @@ class PartyList {
     return retVal;
   }
 
+  ///for readability during debugging, been using alot of print(partyList)
   @override
   String toString() {
     String builder = "";

@@ -9,7 +9,7 @@ class Party {
     required this.partyDescription,
   });
 
-  /// preparing the party to be eligible to be inserted in localstorage
+  /// preparing the party to be valid to be inserted in localstorage
   toJsonEncodable() {
     Map<String, dynamic> jsonBuilder = {};
     jsonBuilder['partyName'] = partyName;
@@ -19,6 +19,8 @@ class Party {
     return jsonBuilder;
   }
 
+  ///create a party from a json object (convert localStorage object
+  ///back to modelclass)
   Party.fromJson(Map<String, dynamic> json)
       : partyName = json['partyName'],
         partyDescription = json['partyDescription'],

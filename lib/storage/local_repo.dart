@@ -18,15 +18,12 @@ class LocalRepo {
       List<dynamic> jsonParties = storage.getItem('partylist') as List;
 
       for (var party in jsonParties) {
-        //build in some nullchecks maybe
         if (party['occurDate'].runtimeType == String) {
           party['occurDate'] = DateTime.parse(party['occurDate']);
         }
         party = Party.fromJson(party);
         partyList.parties.add(party);
       }
-
-      return partyList;
     }
     return partyList;
   }
