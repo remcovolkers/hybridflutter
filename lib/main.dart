@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_planner_app/pages/add_party_page.dart';
 import 'package:party_planner_app/pages/party_overview_page.dart';
+import 'package:party_planner_app/storage/local_repo.dart';
 import 'package:party_planner_app/themes.dart';
 
 void main() {

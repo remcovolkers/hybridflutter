@@ -15,7 +15,6 @@ class AddPartyPage extends StatefulWidget {
 class _AddPartyPageState extends State<AddPartyPage> {
   ///adding a key for (some) form validation
   final _formKey = GlobalKey<FormState>();
-  final PartyList partyList = PartyList();
 
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime selectedDate = DateTime.now();
@@ -155,12 +154,9 @@ class _AddPartyPageState extends State<AddPartyPage> {
     return null;
   }
 
-  void writeParty(
-    String partyName,
-    String partyDescription,
-    DateTime date,
-    TimeOfDay time,
-  ) {
+  void writeParty(String partyName, String partyDescription, DateTime date,
+      TimeOfDay time) {
+    PartyList partyList = LocalRepo.getPartyList();
     final toUTC =
         DateTime(date.year, date.month, date.year, time.hour, time.minute);
     Party party = Party(

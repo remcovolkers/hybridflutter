@@ -1,4 +1,4 @@
 # Known bugs
-Add a party screen: 
     
-    - Can create event on same day with time that has already passed
+    - not changing the time window doesn't fill the time frame thingy
+    - you can plan an event in the past if you choose today and set a time in history. 

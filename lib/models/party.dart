@@ -28,7 +28,6 @@ class Party {
   String toString() {
     return ' date: ' +
         occurDate.toString() +
-        '\n time: ' +
         '\n partyname: ' +
         partyName +
         '\n partydescription: ' +

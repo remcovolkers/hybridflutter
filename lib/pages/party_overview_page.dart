@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:party_planner_app/models/party.dart';
 import 'package:party_planner_app/models/partylist.dart';
 import 'package:party_planner_app/storage/local_repo.dart';
 
@@ -13,7 +12,40 @@ class PartyOverViewPage extends StatefulWidget {
 class _PartyOverViewPageState extends State<PartyOverViewPage> {
   @override
   Widget build(BuildContext context) {
-    return const PartyCard();
+    return FutureBuilder(
+      future: LocalRepo.isReady(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return buildLoading();
+          default:
+            if (snapshot.hasError) {
+              return buildError(snapshot);
+            } else {
+              PartyList partyList = LocalRepo.getPartyList();
+              return buildLoaded(partyList);
+            }
+        }
+      },
+    );
+  }
+
+  Text buildLoaded(PartyList partyList) {
+    return Text(
+      'Result: $partyList',
+    );
+  }
+
+  Widget buildLoading() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget buildError(AsyncSnapshot<Object?> snapshot) {
+    return Text(
+      'result: ${snapshot.data}',
+    );
   }
 }
 
@@ -29,15 +61,6 @@ class PartyCard extends StatefulWidget {
 class _PartyCardState extends State<PartyCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: SizedBox(
-        height: 100,
-        width: double.infinity,
-        child: InkWell(
-          child: const Text('yo'),
-          onTap: () => LocalRepo.getPartyList(),
-        ),
-      ),
-    );
+    return const Card();
   }
 }

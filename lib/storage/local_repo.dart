@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:localstorage/localstorage.dart';
 import 'package:party_planner_app/models/party.dart';
 import '../models/partylist.dart';
@@ -21,10 +19,13 @@ class LocalRepo {
 
       for (var party in jsonParties) {
         //build in some nullchecks maybe
-        party['occurDate'] = DateTime.parse(party['occurDate']);
+        if (party['occurDate'].runtimeType == String) {
+          party['occurDate'] = DateTime.parse(party['occurDate']);
+        }
         party = Party.fromJson(party);
         partyList.parties.add(party);
       }
+
       return partyList;
     }
     return partyList;
@@ -32,5 +33,9 @@ class LocalRepo {
 
   static clearList() {
     storage.clear();
+  }
+
+  static isReady() {
+    return storage.ready;
   }
 }
