@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Themes {
-  static ThemeData themeData() {
+  ThemeData themeData() {
     return ThemeData(
       //---------------------------------------------------------------------
       //              Main theme / darkmode - lightmode
       //---------------------------------------------------------------------
-      colorSchemeSeed: Colors.grey,
+      colorSchemeSeed: Colors.blueGrey,
       brightness: Brightness.dark,
       //---------------------------------------------------------------------
       //                        Button theme
@@ -27,8 +27,12 @@ class Themes {
       //                        Card theme
       //---------------------------------------------------------------------
       cardTheme: CardTheme(
-        color: Colors.grey.shade500,
+        color: Colors.blueGrey[500],
       ),
+      dividerTheme: DividerThemeData(
+        color: Colors.blueGrey[700],
+      ),
+
       //---------------------------------------------------------------------
       //                        Text theme
       //---------------------------------------------------------------------

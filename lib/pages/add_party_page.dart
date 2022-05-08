@@ -137,6 +137,7 @@ class _AddPartyPageState extends State<AddPartyPage> {
     return Column(
       children: [
         TextFormField(
+          maxLength: textEditingController == _partyNameController ? 30 : 100,
           controller: textEditingController,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),

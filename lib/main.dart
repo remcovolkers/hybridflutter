@@ -23,7 +23,7 @@ class PartyPlanner extends StatelessWidget {
             ),
       },
       debugShowCheckedModeBanner: false,
-      theme: Themes.themeData(),
+      theme: Themes().themeData(),
       home: const MyHomePage(
         title: 'Party Planner',
         render: PartyOverViewPage(),
@@ -52,6 +52,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        actions: [
+          Visibility(
+            visible:
+                ModalRoute.of(context)!.settings.name == '/' ? true : false,
+            child: IconButton(
+              onPressed: () => {
+                Navigator.pushNamed(context, '/add_party'),
+              },
+              icon: const Icon(Icons.add),
+            ),
+          ),
+        ],
         automaticallyImplyLeading:
             //TODO: FIX BEFORE HAND IN
             ModalRoute.of(context)?.settings.name == '/' ? false : true,
@@ -64,16 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             widget.render,
           ],
-        ),
-      ),
-      floatingActionButton: Visibility(
-        //If we're not on the homepage, don't show the add party FAB.
-        visible: ModalRoute.of(context)?.settings.name == '/' ? true : false,
-        child: FloatingActionButton(
-          onPressed: () => {
-            Navigator.pushNamed(context, '/add_party'),
-          },
-          child: const Icon(Icons.add),
         ),
       ),
     );
