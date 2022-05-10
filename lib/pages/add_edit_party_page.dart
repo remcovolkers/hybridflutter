@@ -5,14 +5,14 @@ import 'package:party_planner_app/models/partylist.dart';
 import 'package:party_planner_app/storage/local_repo.dart';
 import 'package:party_planner_app/utils/utils.dart';
 
-class AddPartyPage extends StatefulWidget {
-  const AddPartyPage({Key? key}) : super(key: key);
+class AddEditPartyPage extends StatefulWidget {
+  const AddEditPartyPage({Key? key}) : super(key: key);
 
   @override
-  State<AddPartyPage> createState() => _AddPartyPageState();
+  State<AddEditPartyPage> createState() => _AddEditPartyPageState();
 }
 
-class _AddPartyPageState extends State<AddPartyPage> {
+class _AddEditPartyPageState extends State<AddEditPartyPage> {
   ///adding a key for (some) form validation
   final _formKey = GlobalKey<FormState>();
 
@@ -23,6 +23,7 @@ class _AddPartyPageState extends State<AddPartyPage> {
   final TextEditingController _partyNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+  bool isEdit = false;
 
   @override
   void initState() {
@@ -33,6 +34,16 @@ class _AddPartyPageState extends State<AddPartyPage> {
 
   @override
   Widget build(BuildContext context) {
+    Party party;
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      party = ModalRoute.of(context)!.settings.arguments as Party;
+      setState(() {
+        isEdit = true;
+      });
+      _descriptionController.text = party.partyDescription;
+      _partyNameController.text = party.partyName;
+    }
+
     final formattedTimeOfDay = stringFromTimeOfDay(selectedTime, context);
     return Form(
       key: _formKey,
@@ -126,8 +137,8 @@ class _AddPartyPageState extends State<AddPartyPage> {
               timeOfDayfromString(_timeController.text));
         }
       },
-      child: const Text(
-        'Create party',
+      child: Text(
+        isEdit ? 'Update party' : 'Create Party',
       ),
     );
   }
@@ -167,6 +178,9 @@ class _AddPartyPageState extends State<AddPartyPage> {
       partyDescription: partyDescription,
       occurDate: toUTC,
     );
+    if (isEdit) {
+      LocalRepo.editParty(party);
+    }
     partyList.parties.add(party);
 
     LocalRepo.saveToLocalRepo(partyList);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:party_planner_app/pages/add_party_page.dart';
+import 'package:party_planner_app/pages/add_edit_party_page.dart';
 import 'package:party_planner_app/pages/party_overview_page.dart';
 
 import 'package:party_planner_app/themes.dart';
@@ -19,8 +19,12 @@ class PartyPlanner extends StatelessWidget {
       routes: {
         '/add_party': (context) => const MyHomePage(
               title: 'Add a party',
-              render: AddPartyPage(),
+              render: AddEditPartyPage(),
             ),
+        '/edit_party': (context) => const MyHomePage(
+              title: 'Edit Party',
+              render: AddEditPartyPage(),
+            )
       },
       debugShowCheckedModeBanner: false,
       theme: Themes().themeData(),

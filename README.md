@@ -13,6 +13,5 @@
 
 # Needs implemententing
     - Light/darkmode toggle
-    - inviting contacts 
-    * Removing party
-    - Editing party
+    - inviting contacts
+    * Editing party

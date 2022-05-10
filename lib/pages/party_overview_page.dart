@@ -67,6 +67,13 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
         });
         LocalRepo.removeParty(party);
         break;
+      case 'Edit Party':
+        Navigator.pushNamed(
+          context,
+          '/add_party',
+          arguments: party,
+        );
+        break;
     }
   }
 }
@@ -166,7 +173,20 @@ class _PartyCardState extends State<PartyCard> {
       (MenuItem menuItem) {
         return PopupMenuItem<MenuItem>(
           value: menuItem,
-          child: Text(menuItem.text),
+          child: Row(
+            children: [
+              Icon(
+                menuItem.icon,
+                size: 18,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(
+                  left: 8,
+                ),
+              ),
+              Text(menuItem.text)
+            ],
+          ),
         );
       },
     ).toList();

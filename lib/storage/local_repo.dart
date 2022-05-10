@@ -23,6 +23,13 @@ class LocalRepo {
     saveToLocalRepo(partyList);
   }
 
+  static editParty(Party party) async {
+    PartyList partyList = getPartyList();
+    Party temp =
+        partyList.parties.firstWhere((element) => element.id == ++party.id);
+    print(temp.id);
+  }
+
   static PartyList getPartyList() {
     PartyList partyList = PartyList();
     if (storage.getItem('partylist') != null) {
