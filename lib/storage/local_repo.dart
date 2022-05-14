@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:localstorage/localstorage.dart';
 import 'package:party_planner_app/models/party.dart';
 import '../models/partylist.dart';
@@ -14,20 +16,15 @@ class LocalRepo {
 
   static removeParty(Party party) async {
     PartyList partyList = getPartyList();
-
-    ///there must be something wrong with my party model.
-    ///the removeParty makes a new party somehow, this fixes it.
-    ///This makes sure we can remove on Id and is more failsafe than comparing
-    ///names.
-    partyList.parties.removeWhere((element) => element.id == ++party.id);
+    partyList.parties
+        .removeWhere((element) => element.partyName == party.partyName);
     saveToLocalRepo(partyList);
   }
 
   static editParty(Party party) async {
     PartyList partyList = getPartyList();
-    Party temp =
-        partyList.parties.firstWhere((element) => element.id == ++party.id);
-    print(temp.id);
+    Party temp = partyList.parties
+        .firstWhere((element) => element.partyName == party.partyName);
   }
 
   static PartyList getPartyList() {

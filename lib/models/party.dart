@@ -1,6 +1,4 @@
 class Party {
-  static int counter = 0;
-  int id = ++counter;
   DateTime occurDate;
   String partyName;
   String partyDescription;

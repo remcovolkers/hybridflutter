@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:party_planner_app/models/party.dart';
 import 'package:intl/intl.dart';
@@ -171,8 +173,33 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
   void writeParty(String partyName, String partyDescription, DateTime date,
       TimeOfDay time) {
     PartyList partyList = LocalRepo.getPartyList();
-    final toUTC =
-        DateTime(date.year, date.month, date.year, time.hour, time.minute);
+
+    String dateParserString = date.year.toString() +
+        '-' +
+        fixTimeDateFormat(
+          date.month.toString(),
+        ) +
+        '-' +
+        fixTimeDateFormat(
+          date.day.toString(),
+        ) +
+        ' ' +
+        fixTimeDateFormat(
+          time.hour.toString(),
+        ) +
+        ':' +
+        fixTimeDateFormat(
+          time.minute.toString(),
+        ) +
+        '00';
+
+    log(fixTimeDateFormat(
+      date.month.toString(),
+    ));
+
+    final toUTC = DateTime.parse(dateParserString);
+    log(toUTC.toString());
+
     Party party = Party(
       partyName: partyName,
       partyDescription: partyDescription,
@@ -181,6 +208,7 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
     if (isEdit) {
       LocalRepo.editParty(party);
     }
+    log(party.toString());
     partyList.parties.add(party);
 
     LocalRepo.saveToLocalRepo(partyList);
@@ -197,12 +225,22 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
       initialEntryMode: TimePickerEntryMode.dial,
     );
 
-    if (timeOfDay != null && timeOfDay != selectedTime) {
+    if (timeOfDay != null) {
       String timeString = timeOfDay.format(context);
+      log(timeString);
       setState(() {
-        selectedTime = timeOfDay;
         _timeController.text = timeString;
       });
     }
+    print(selectedTime);
+  }
+
+  String fixTimeDateFormat(String needsFixing) {
+    String fixed = needsFixing;
+    if (needsFixing.length == 1) {
+      fixed = '0' + needsFixing;
+    }
+    log(fixed);
+    return fixed;
   }
 }
