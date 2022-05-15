@@ -7,24 +7,11 @@ import '../models/partylist.dart';
 class LocalRepo {
   static LocalStorage storage = LocalStorage('partylist');
 
-  static void saveToLocalRepo(PartyList partyList) {
-    storage.setItem(
+  static saveToLocalRepo(PartyList partyList) async {
+    await storage.setItem(
       'partylist',
       partyList.toJsonEncodable(),
     );
-  }
-
-  static removeParty(Party party) async {
-    PartyList partyList = getPartyList();
-    partyList.parties
-        .removeWhere((element) => element.partyName == party.partyName);
-    saveToLocalRepo(partyList);
-  }
-
-  static editParty(Party party) async {
-    PartyList partyList = getPartyList();
-    Party temp = partyList.parties
-        .firstWhere((element) => element.partyName == party.partyName);
   }
 
   static PartyList getPartyList() {

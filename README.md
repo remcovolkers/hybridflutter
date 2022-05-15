@@ -4,10 +4,12 @@
     / = worked on, not finished
   
     - you can plan an event in the past if you choose today and set a time in history. 
-    - Pressing back will also go back in list items.. after you've added a party :D //ugly fix instated prefixed with TODO in main.dart.
     - only buildLoading is properly implemented in party_overview_page 
+    - Validation errors add padding that make everything look ugly eww
 
 # Needs implemententing
     - Light/darkmode toggle
     - inviting contacts
-    / Editing party
+
+# Documentation
+    - party id absence made life harder, had removeItem yada

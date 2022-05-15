@@ -53,24 +53,27 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    bool isOverviewPage = ModalRoute.of(context)?.settings.name == '/';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         actions: [
-          Visibility(
-            visible:
-                ModalRoute.of(context)!.settings.name == '/' ? true : false,
-            child: IconButton(
-              onPressed: () => {
-                Navigator.pushNamed(context, '/add_party'),
-              },
-              icon: const Icon(Icons.add),
+          IconButton(
+            color: Theme.of(context).iconTheme.color,
+            onPressed: () => {
+              isOverviewPage
+                  ? Navigator.pushNamed(
+                      context,
+                      '/add_party',
+                    )
+                  : Navigator.pop(context),
+            },
+            icon: Icon(
+              isOverviewPage ? Icons.add : Icons.arrow_back,
             ),
           ),
         ],
-        automaticallyImplyLeading:
-            //TODO: FIX BEFORE HAND IN
-            ModalRoute.of(context)?.settings.name == '/' ? false : true,
+        automaticallyImplyLeading: false,
         title: Text(
           widget.title,
         ),

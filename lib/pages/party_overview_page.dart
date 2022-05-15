@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:party_planner_app/models/partylist.dart';
@@ -17,21 +19,27 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: LocalRepo.isReady(),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return buildLoading();
-          default:
-            if (snapshot.hasError) {
-              return buildError(snapshot);
-            } else {
-              partyList.parties = LocalRepo.getPartyList().parties;
-              return buildLoaded(partyList);
-            }
-        }
+    bool shouldPop = false;
+    return WillPopScope(
+      onWillPop: () async {
+        return shouldPop;
       },
+      child: FutureBuilder(
+        future: LocalRepo.isReady(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return buildLoading();
+            default:
+              if (snapshot.hasError) {
+                return buildError(snapshot);
+              } else {
+                partyList.parties = LocalRepo.getPartyList().parties;
+                return buildLoaded(partyList);
+              }
+          }
+        },
+      ),
     );
   }
 
@@ -40,6 +48,7 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
       children: [
         for (Party party in partyList.parties)
           PartyCard(
+            partyIndex: partyList.parties.indexOf(party),
             party: party,
             handleSelection: handleSelection,
           )
@@ -59,19 +68,20 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
     );
   }
 
-  handleSelection(Party party, MenuItem menuItem) {
+  handleSelection(Party party, MenuItem menuItem, int partyIndex) {
     switch (menuItem.text) {
       case 'Remove Party':
         setState(() {
           partyList.parties.remove(party);
         });
-        LocalRepo.removeParty(party);
+        partyList.parties.remove(party);
+        LocalRepo.saveToLocalRepo(partyList);
         break;
       case 'Edit Party':
         Navigator.pushNamed(
           context,
           '/edit_party',
-          arguments: party,
+          arguments: [partyIndex, party],
         );
         break;
     }
@@ -81,9 +91,13 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
 class PartyCard extends StatefulWidget {
   final Party party;
   final Function handleSelection;
+  final int partyIndex;
 
   const PartyCard(
-      {Key? key, required this.party, required this.handleSelection})
+      {Key? key,
+      required this.party,
+      required this.handleSelection,
+      required this.partyIndex})
       : super(key: key);
 
   @override
@@ -145,10 +159,11 @@ class _PartyCardState extends State<PartyCard> {
             PopupMenuButton<MenuItem>(
               child: const Icon(
                 Icons.more_vert,
+                color: Colors.white,
               ),
               tooltip: 'Select action',
-              onSelected: (MenuItem menuItem) =>
-                  widget.handleSelection(widget.party, menuItem),
+              onSelected: (MenuItem menuItem) => widget.handleSelection(
+                  widget.party, menuItem, widget.partyIndex),
               itemBuilder: (BuildContext context) {
                 return _buildItems();
               },
@@ -190,20 +205,20 @@ class _PartyCardState extends State<PartyCard> {
   }
 
   Column dateBuilder() {
-    String date = DateFormat('yy-MM-dd').format(widget.party.occurDate);
+    String date = DateFormat('dd-MM-yyyy').format(widget.party.occurDate);
     String time = DateFormat('hh:mm a').format(widget.party.occurDate);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Date: ' + date,
+          'DATE: ' + date,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
-          'Time: ' + time,
+          'TIME: ' + time,
         ),
       ],
     );
@@ -228,7 +243,7 @@ class MenuItems {
   ];
 
   static const itemInvite = MenuItem(
-    text: 'Invite Guests',
+    text: 'Add Attendees',
     icon: Icons.people,
   );
 

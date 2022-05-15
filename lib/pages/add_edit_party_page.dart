@@ -29,24 +29,40 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
 
   @override
   void initState() {
-    _dateController.text = "";
     _timeController.text = "";
+    _dateController.text = "";
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    int partyIndex = -1;
     Party party;
+
     if (ModalRoute.of(context)!.settings.arguments != null) {
-      party = ModalRoute.of(context)!.settings.arguments as Party;
+      List<dynamic> args = ModalRoute.of(context)!.settings.arguments as List;
+      party = args[1];
+      partyIndex = args[0];
+
       setState(() {
         isEdit = true;
+        String date = DateFormat('yyyy-MM-dd').format(party.occurDate);
+        String time = DateFormat('hh:mm a').format(party.occurDate);
+
+        if (_timeController.text == "") {
+          _dateController.text = date;
+          _timeController.text = time;
+        }
       });
       _descriptionController.text = party.partyDescription;
       _partyNameController.text = party.partyName;
     }
 
-    final formattedTimeOfDay = stringFromTimeOfDay(selectedTime, context);
+    final formattedTimeOfDay = stringFromTimeOfDay(
+      selectedTime,
+      context,
+    );
+
     return Form(
       key: _formKey,
       child: Column(
@@ -67,7 +83,7 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
                     ),
                   ],
                 ),
-                submitBtn(),
+                submitBtn(partyIndex),
               ],
             ),
           )
@@ -120,23 +136,29 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
           hintText: formattedTimeOfDay,
         ),
         onTap: () => {
-          _selectTime(context),
+          _selectTime(
+            context,
+          ),
         },
       ),
     );
   }
 
-  ElevatedButton submitBtn() {
+  ElevatedButton submitBtn(int partyIndex) {
     return ElevatedButton(
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           writeParty(
-              _partyNameController.text,
-              _descriptionController.text,
-              DateTime.parse(
-                _dateController.text,
-              ),
-              timeOfDayfromString(_timeController.text));
+            partyIndex,
+            _partyNameController.text,
+            _descriptionController.text,
+            DateTime.parse(
+              _dateController.text,
+            ),
+            timeOfDayfromString(
+              _timeController.text,
+            ),
+          );
         }
       },
       child: Text(
@@ -158,7 +180,9 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
           ),
           validator: validateFormField,
         ),
-        addVerticalSpace(10),
+        addVerticalSpace(
+          10,
+        ),
       ],
     );
   }
@@ -170,10 +194,67 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
     return null;
   }
 
-  void writeParty(String partyName, String partyDescription, DateTime date,
-      TimeOfDay time) {
+  void writeParty(
+    int partyIndex,
+    String newName,
+    String partyDescription,
+    DateTime date,
+    TimeOfDay time,
+  ) {
     PartyList partyList = LocalRepo.getPartyList();
+    final toUTC = DateTime.parse(dateParser(date, time));
 
+    Party party = Party(
+      partyName: newName,
+      partyDescription: partyDescription,
+      occurDate: toUTC,
+    );
+
+    if (isEdit) {
+      setState(() {
+        partyList.parties[partyIndex].partyName = newName;
+        partyList.parties[partyIndex].partyDescription = partyDescription;
+        partyList.parties[partyIndex].occurDate = toUTC;
+      });
+    } else {
+      setState(() {
+        partyList.parties.add(party);
+      });
+    }
+
+    LocalRepo.saveToLocalRepo(partyList);
+    Navigator.pushReplacementNamed(
+      context,
+      '/',
+    );
+  }
+
+  _selectTime(BuildContext context) async {
+    final TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.dial,
+    );
+
+    if (timeOfDay != null) {
+      String timeString = timeOfDay.format(context);
+
+      setState(() {
+        selectedTime = timeOfDay;
+        _timeController.text = timeString;
+      });
+    }
+  }
+
+  String fixTimeDateFormat(String needsFixing) {
+    String fixed = needsFixing;
+    if (needsFixing.length == 1) {
+      fixed = '0' + needsFixing;
+    }
+    return fixed;
+  }
+
+  String dateParser(date, time) {
     String dateParserString = date.year.toString() +
         '-' +
         fixTimeDateFormat(
@@ -193,55 +274,6 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
         ) +
         '00';
 
-    log(fixTimeDateFormat(
-      date.month.toString(),
-    ));
-
-    final toUTC = DateTime.parse(dateParserString);
-    log(toUTC.toString());
-
-    Party party = Party(
-      partyName: partyName,
-      partyDescription: partyDescription,
-      occurDate: toUTC,
-    );
-    if (isEdit) {
-      LocalRepo.editParty(party);
-    }
-    log(party.toString());
-    partyList.parties.add(party);
-
-    LocalRepo.saveToLocalRepo(partyList);
-    Navigator.pushReplacementNamed(
-      context,
-      '/',
-    );
-  }
-
-  _selectTime(BuildContext context) async {
-    final TimeOfDay? timeOfDay = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-      initialEntryMode: TimePickerEntryMode.dial,
-    );
-
-    if (timeOfDay != null) {
-      String timeString = timeOfDay.format(context);
-      log(timeString);
-      setState(() {
-        selectedTime = timeOfDay;
-        _timeController.text = timeString;
-      });
-    }
-    print(selectedTime);
-  }
-
-  String fixTimeDateFormat(String needsFixing) {
-    String fixed = needsFixing;
-    if (needsFixing.length == 1) {
-      fixed = '0' + needsFixing;
-    }
-    log(fixed);
-    return fixed;
+    return dateParserString;
   }
 }
