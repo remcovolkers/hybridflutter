@@ -1,14 +1,14 @@
-import 'package:party_planner_app/models/party.dart';
+import 'contact_model.dart';
 
-class PartyList {
-  List<Party> parties = [];
+class ContactList {
+  List<ContactModel> contacts = [];
 
   /// collector method so we can have 1 entry in the localstorage,
   /// that entry will be the list of parties instead of unique entries in
   /// localstorage.
   toJsonEncodable() {
-    List retVal = parties.map((party) {
-      return party.toJsonEncodable();
+    List retVal = contacts.map((contact) {
+      return contact.toJsonEncodable();
     }).toList();
 
     return retVal;
@@ -18,10 +18,8 @@ class PartyList {
   @override
   String toString() {
     String builder = "";
-    for (var party in parties) {
-      builder += '-------------------\n';
-      builder += party.toString() + "\n";
-      builder += '-------------------\n';
+    for (var contact in contacts) {
+      builder += contact.displayName += "\n";
     }
     return builder;
   }

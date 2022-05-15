@@ -1,7 +1,9 @@
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:flutter/material.dart';
+import 'package:party_planner_app/pages/add_attendees_page.dart';
 import 'package:party_planner_app/pages/add_edit_party_page.dart';
 import 'package:party_planner_app/pages/party_overview_page.dart';
-
 import 'package:party_planner_app/themes.dart';
 
 void main() {
@@ -24,7 +26,11 @@ class PartyPlanner extends StatelessWidget {
         '/edit_party': (context) => const MyHomePage(
               title: 'Edit Party',
               render: AddEditPartyPage(),
-            )
+            ),
+        '/add_attendees': (context) => const MyHomePage(
+              title: 'Add Attendees',
+              render: AddAttendeesPage(),
+            ),
       },
       debugShowCheckedModeBanner: false,
       theme: Themes().themeData(),
@@ -51,6 +57,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _askPermissions("");
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isOverviewPage = ModalRoute.of(context)?.settings.name == '/';
@@ -86,5 +99,38 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _askPermissions(String routeName) async {
+    PermissionStatus permissionStatus = await _getContactPermission();
+    if (permissionStatus == PermissionStatus.granted) {
+      if (routeName != "") {
+        Navigator.of(context).pushNamed(routeName);
+      }
+    } else {
+      _handleInvalidPermissions(permissionStatus);
+    }
+  }
+
+  Future<PermissionStatus> _getContactPermission() async {
+    PermissionStatus permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.permanentlyDenied) {
+      PermissionStatus permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } else {
+      return permission;
+    }
+  }
+
+  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
+    if (permissionStatus == PermissionStatus.denied) {
+      final snackBar = SnackBar(content: Text('Access to contact data denied'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
+      final snackBar =
+          SnackBar(content: Text('Contact data not available on device'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }

@@ -8,8 +8,9 @@
     - Validation errors add padding that make everything look ugly eww
 
 # Needs implemententing
-    - Light/darkmode toggle
-    - inviting contacts
+    * inviting contacts
+        > application crashes after ive implemented the second list. fix. 
 
 # Documentation
     - party id absence made life harder, had removeItem yada
+    - Localstorage future and contacts, json error.

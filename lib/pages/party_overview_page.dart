@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:party_planner_app/models/partylist.dart';
@@ -75,13 +73,20 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
           partyList.parties.remove(party);
         });
         partyList.parties.remove(party);
-        LocalRepo.saveToLocalRepo(partyList);
+        LocalRepo.savePartyListToLocalStorge(partyList);
         break;
       case 'Edit Party':
         Navigator.pushNamed(
           context,
           '/edit_party',
           arguments: [partyIndex, party],
+        );
+        break;
+      case 'Add Attendees':
+        Navigator.pushNamed(
+          context,
+          '/add_attendees',
+          arguments: partyList.parties[partyIndex],
         );
         break;
     }

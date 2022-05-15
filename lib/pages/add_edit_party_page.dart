@@ -224,7 +224,7 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
       });
     }
 
-    LocalRepo.saveToLocalRepo(partyList);
+    LocalRepo.savePartyListToLocalStorge(partyList);
     Navigator.pushReplacementNamed(
       context,
       '/',
