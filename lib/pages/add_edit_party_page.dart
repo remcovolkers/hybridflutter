@@ -49,13 +49,15 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
         String date = DateFormat('yyyy-MM-dd').format(party.occurDate);
         String time = DateFormat('hh:mm a').format(party.occurDate);
 
-        if (_timeController.text == "") {
+        if (_timeController.text == "" &&
+            _descriptionController.text == "" &&
+            _partyNameController.text == "") {
           _dateController.text = date;
           _timeController.text = time;
+          _partyNameController.text = party.partyName;
+          _descriptionController.text = party.partyDescription;
         }
       });
-      _descriptionController.text = party.partyDescription;
-      _partyNameController.text = party.partyName;
     }
 
     final formattedTimeOfDay = stringFromTimeOfDay(
@@ -189,7 +191,7 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
 
   String? validateFormField(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter some text';
+      return 'This field can\'t be empty.';
     }
     return null;
   }
