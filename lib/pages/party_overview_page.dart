@@ -117,8 +117,7 @@ class _PartyCardState extends State<PartyCard> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: dateBuilder()
-                    ),
+                    child: dateBuilder(),
                   ),
                 ),
               ],
@@ -190,13 +189,24 @@ class _PartyCardState extends State<PartyCard> {
     ).toList();
   }
 
-  Text dateBuilder() {
-    //fix 24:00 to 00:00.
-    print(widget.party.occurDate);
-    if(widget.party.occurDate.hour.toInt() == 24){
-    
-    }
-    return Text(DateFormat('yyyy-MM-dd | kk:mm').format(widget.party.occurDate));
+  Column dateBuilder() {
+    String date = DateFormat('yy-MM-dd').format(widget.party.occurDate);
+    String time = DateFormat('hh:mm a').format(widget.party.occurDate);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Date: ' + date,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'Time: ' + time,
+        ),
+      ],
+    );
   }
 }
 

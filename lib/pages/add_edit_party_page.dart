@@ -229,6 +229,7 @@ class _AddEditPartyPageState extends State<AddEditPartyPage> {
       String timeString = timeOfDay.format(context);
       log(timeString);
       setState(() {
+        selectedTime = timeOfDay;
         _timeController.text = timeString;
       });
     }
