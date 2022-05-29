@@ -11,4 +11,9 @@ class ContactModel {
 
   ContactModel.fromJson(Map<String, dynamic> json)
       : displayName = json['displayName'];
+
+  @override
+  String toString() {
+    return displayName;
+  }
 }

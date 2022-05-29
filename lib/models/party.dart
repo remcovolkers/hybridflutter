@@ -1,10 +1,8 @@
-import 'package:party_planner_app/models/contact_model.dart';
-
 class Party {
   DateTime occurDate;
   String partyName;
   String partyDescription;
-  List<ContactModel> attendees = [];
+  List<String> attendees = [];
 
   Party({
     required this.occurDate,
@@ -21,10 +19,6 @@ class Party {
     jsonBuilder['attendees'] = attendees;
 
     return jsonBuilder;
-  }
-
-  addAttendee(ContactModel attendee) {
-    attendees.add(attendee);
   }
 
   ///create a party from a json object (convert localStorage object

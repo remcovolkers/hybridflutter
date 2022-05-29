@@ -23,4 +23,25 @@ class ContactList {
     }
     return builder;
   }
+
+  bool contains(ContactModel contact) {
+    for (var element in contacts) {
+      if (element == contact) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void remove(ContactModel contact) {
+    if (contacts.contains(contact)) {
+      contacts.remove(contact);
+    }
+  }
+
+  void add(ContactModel contact) {
+    if (contacts.contains(contact)) {
+      contacts.add(contact);
+    }
+  }
 }

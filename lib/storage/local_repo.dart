@@ -9,11 +9,11 @@ class LocalRepo {
   static LocalStorage storage = LocalStorage('partylist');
 
   static savePartyListToLocalStorge(PartyList partyList) async {
-    log(partyList.toString());
     await storage.setItem(
       'partylist',
       partyList.toJsonEncodable(),
     );
+    log(partyList.toString());
   }
 
   static PartyList getPartyList() {
@@ -29,7 +29,16 @@ class LocalRepo {
         partyList.parties.add(party);
       }
     }
+    print(partyList);
     return partyList;
+  }
+
+  static saveParty(Party party) async {
+    PartyList partyList = getPartyList();
+    partyList.parties
+        .removeWhere((element) => element.partyName == party.partyName);
+    partyList.parties.add(party);
+    await savePartyListToLocalStorge(partyList);
   }
 
   static clearList() {
