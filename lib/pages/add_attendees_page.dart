@@ -49,7 +49,7 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
             ),
             isInvited
                 ? IconButton(
-                    color: Colors.red,
+                    color: Colors.grey,
                     onPressed: () async {
                       handleRemoveAttendee(contact, party);
                     },
@@ -58,7 +58,7 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
                     ),
                   )
                 : IconButton(
-                    color: Colors.green,
+                    color: Colors.white54,
                     onPressed: () async {
                       handleAddAttendee(contact, party);
                     },
