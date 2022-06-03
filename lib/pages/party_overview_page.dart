@@ -223,7 +223,7 @@ class _PartyCardState extends State<PartyCard> {
   }
 
   Column dateBuilder() {
-    String date = DateFormat('dd-MM-yyyy').format(widget.party.occurDate);
+    String date = DateFormat('yyyy-MM-dd').format(widget.party.occurDate);
     String time = DateFormat('hh:mm a').format(widget.party.occurDate);
 
     return Column(
