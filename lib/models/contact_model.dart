@@ -1,3 +1,4 @@
+///Simple Class to store contacts as String
 class ContactModel {
   String displayName;
   ContactModel({required this.displayName});
@@ -11,4 +12,9 @@ class ContactModel {
 
   ContactModel.fromJson(Map<String, dynamic> json)
       : displayName = json['displayName'];
+
+  @override
+  String toString() {
+    return displayName;
+  }
 }

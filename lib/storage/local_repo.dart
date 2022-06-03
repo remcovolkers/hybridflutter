@@ -1,14 +1,16 @@
 import 'dart:developer';
 
 import 'package:localstorage/localstorage.dart';
-import 'package:party_planner_app/models/contactlist.dart';
 import 'package:party_planner_app/models/party.dart';
-import '../models/contact_model.dart';
+
 import '../models/partylist.dart';
 
+/// created this class because its cleaner to manage the localstorage
+/// from one file.
 class LocalRepo {
   static LocalStorage storage = LocalStorage('partylist');
 
+  /// Saving a PartyList to the localstorage
   static savePartyListToLocalStorge(PartyList partyList) async {
     await storage.setItem(
       'partylist',
@@ -16,25 +18,7 @@ class LocalRepo {
     );
   }
 
-  static saveContactListToLocalStorage(ContactList contactList) async {
-    await storage.setItem(
-      'contactlist',
-      contactList.toJsonEncodable(),
-    );
-  }
-
-  static ContactList getContactList() {
-    ContactList contactList = ContactList();
-    if (storage.getItem('contactlist') != null) {
-      List<dynamic> jsonContacts = storage.getItem('contactlist') as List;
-      for (var contact in jsonContacts) {
-        contact = ContactModel.fromJson(contact);
-        contactList.contacts.add(contact);
-      }
-    }
-    return contactList;
-  }
-
+  ///getting the PartyList as PartyList
   static PartyList getPartyList() {
     PartyList partyList = PartyList();
     if (storage.getItem('partylist') != null) {
@@ -48,11 +32,21 @@ class LocalRepo {
         partyList.parties.add(party);
       }
     }
+
     return partyList;
   }
 
-  static clearList() {
-    storage.clear();
+  /// Saving a party. This function is not perfect as it deletes an element
+  /// with the same name, requiring the user to enter unique names for their
+  /// parties. I couldn't get an ID system running on my Party Model because
+  /// i'm creating parties everywhere and it felt like too much refactoring
+  /// for the functionality added.
+  static saveParty(Party party) async {
+    PartyList partyList = getPartyList();
+    partyList.parties
+        .removeWhere((element) => element.partyName == party.partyName);
+    partyList.parties.add(party);
+    await savePartyListToLocalStorge(partyList);
   }
 
   static isReady() {

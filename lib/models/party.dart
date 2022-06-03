@@ -2,6 +2,7 @@ class Party {
   DateTime occurDate;
   String partyName;
   String partyDescription;
+  List<String> attendees = [];
 
   Party({
     required this.occurDate,
@@ -15,6 +16,7 @@ class Party {
     jsonBuilder['partyName'] = partyName;
     jsonBuilder['partyDescription'] = partyDescription;
     jsonBuilder['occurDate'] = occurDate.toIso8601String();
+    jsonBuilder['attendees'] = attendees;
 
     return jsonBuilder;
   }
@@ -24,7 +26,9 @@ class Party {
   Party.fromJson(Map<String, dynamic> json)
       : partyName = json['partyName'],
         partyDescription = json['partyDescription'],
-        occurDate = json['occurDate'];
+        occurDate = json['occurDate'].runtimeType == String
+            ? DateTime.parse(json['occurDate'])
+            : json['occurDate'];
 
   @override
   String toString() {
@@ -33,6 +37,8 @@ class Party {
         '\n partyname: ' +
         partyName +
         '\n partydescription: ' +
-        partyDescription;
+        partyDescription +
+        '\n attendees: ' +
+        attendees.toString();
   }
 }

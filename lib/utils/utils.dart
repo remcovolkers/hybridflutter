@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 
-Widget addVerticalSpace(double height) {
+// vertical spacing
+SizedBox addVerticalSpace(double height) {
   return SizedBox(
     height: height,
   );
 }
 
-Widget addHorizontalSpace(double width) {
+// horizontal spacing
+SizedBox addHorizontalSpace(double width) {
   return SizedBox(
     width: width,
   );
 }
 
-Widget addSpaceInRow(double width, double height) {
+//A row item needs height and width
+SizedBox addSpaceInRow(double width, double height) {
   return SizedBox(
     width: width,
     height: height,
   );
 }
 
+// convert String to TimeOfDay
 TimeOfDay timeOfDayfromString(String time) {
   int hh = 0;
   if (time.endsWith('PM')) hh = 12;
@@ -31,6 +35,7 @@ TimeOfDay timeOfDayfromString(String time) {
   );
 }
 
+// convert TimeOfDay to String
 String stringFromTimeOfDay(TimeOfDay tod, BuildContext context) {
   final localizations = MaterialLocalizations.of(context);
   final formattedTimeOfDay = localizations.formatTimeOfDay(tod);
