@@ -1,7 +1,6 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:party_planner_app/models/contactlist.dart';
-import 'package:collection/collection.dart';
 import 'package:party_planner_app/storage/local_repo.dart';
 import '../models/contact_model.dart';
 import '../models/party.dart';
@@ -14,9 +13,13 @@ class AddAttendeesPage extends StatefulWidget {
 }
 
 class _AddAttendeesPageState extends State<AddAttendeesPage> {
+  /// Contact List we will store our phone contacts in
   ContactList contactList = ContactList();
+
+  /// Holder for invitees per party
   List<String> invitees = [];
 
+  /// Uses contacts_service to get Contacts. Stores contacts so we can use 'm
   Future<ContactList> setContacts() async {
     ContactList contactList = ContactList();
 
@@ -31,7 +34,8 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
     return contactList;
   }
 
-  Widget attendeeBuilder(ContactModel contact, Party party) {
+  /// Builds card, has checks for invited or not
+  Card attendeeCard(ContactModel contact, Party party) {
     bool isInvited;
 
     invitees.contains(contact.displayName)
@@ -39,6 +43,7 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
         : isInvited = false;
 
     return Card(
+      color: isInvited ? Colors.green : null,
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Row(
@@ -49,7 +54,7 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
             ),
             isInvited
                 ? IconButton(
-                    color: Colors.grey,
+                    color: Colors.deepOrange,
                     onPressed: () async {
                       handleRemoveAttendee(contact, party);
                     },
@@ -72,10 +77,7 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
     );
   }
 
-  /// handleAddAttendee zorgt ervoor dat we een lijst van contacts binnen krijgen,
-  /// deze contacts worden vervolgens vergeleken met de party.attendees
-  /// respectievelijk krijgen deze kaarten dan een remove of een add knop op de kaart.
-
+  /// Handles the add button, stores it in LocalStorage and rebuilds page
   handleAddAttendee(ContactModel contact, Party party) async {
     party.attendees.add(contact.displayName);
     setState(() {
@@ -84,6 +86,7 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
     LocalRepo.saveParty(party);
   }
 
+  /// Handles the remove button, removes it from LocalStorage and rebuilds page
   handleRemoveAttendee(ContactModel contact, Party party) async {
     party.attendees.remove(contact.displayName);
     setState(() {
@@ -92,30 +95,28 @@ class _AddAttendeesPageState extends State<AddAttendeesPage> {
     LocalRepo.saveParty(party);
   }
 
-  Widget buildLoaded(ContactList contactList) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: contactList.contacts.length,
-      itemBuilder: (context, index) {
-        Party party;
-        if (ModalRoute.of(context)!.settings.arguments != null) {
-          party = ModalRoute.of(context)!.settings.arguments as Party;
-          return attendeeBuilder(contactList.contacts[index], party);
-        }
-        //return party doesn't exist
-        return Container();
-      },
+  /// Our scrollable list of contacts.
+  Column buildLoaded(ContactList contactList, Party party) {
+    List<Widget> attendeeCards = [];
+    for (var name in contactList.contacts) {
+      attendeeCards.add(attendeeCard(name, party));
+    }
+    return Column(
+      children: attendeeCards,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    Party party = ModalRoute.of(context)!.settings.arguments as Party;
+    invitees = party.attendees;
+
     return FutureBuilder(
       future: setContacts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           contactList = snapshot.data as ContactList;
-          return buildLoaded(contactList);
+          return buildLoaded(contactList, party);
         } else {
           return const Center(
             child: Padding(

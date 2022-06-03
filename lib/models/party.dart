@@ -26,7 +26,9 @@ class Party {
   Party.fromJson(Map<String, dynamic> json)
       : partyName = json['partyName'],
         partyDescription = json['partyDescription'],
-        occurDate = json['occurDate'];
+        occurDate = json['occurDate'].runtimeType == String
+            ? DateTime.parse(json['occurDate'])
+            : json['occurDate'];
 
   @override
   String toString() {

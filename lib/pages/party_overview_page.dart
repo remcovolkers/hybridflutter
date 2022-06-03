@@ -17,12 +17,16 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
 
   @override
   Widget build(BuildContext context) {
+    /// so.. shouldPop makes sure the Party Overview Page can't be popped.
+    /// Popping the overview page would setState into previous states.
+    /// I don't know if this is the right way to fix it, but here we are.
     bool shouldPop = false;
     return WillPopScope(
       onWillPop: () async {
         return shouldPop;
       },
       child: FutureBuilder(
+        //localrepo will initialize and fire off a boolean when done
         future: LocalRepo.isReady(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
@@ -41,6 +45,9 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
     );
   }
 
+  /// returns a column with parties, scrollable because the main (render) widget
+  /// is wrapped around a single child scrollview (in main.dart)
+  /// Passes partyindex so we can modify it in the rest of the application
   Widget buildLoaded(PartyList partyList) {
     return Column(
       children: [
@@ -54,18 +61,21 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
     );
   }
 
+  /// some state management
   Widget buildLoading() {
     return const Center(
       child: CircularProgressIndicator(),
     );
   }
 
+  /// some state management
   Widget buildError(AsyncSnapshot<Object?> snapshot) {
     return Text(
       'result: ${snapshot.data}',
     );
   }
 
+  /// handling more_vert options and passing along arguments to routes.
   handleSelection(Party party, MenuItem menuItem, int partyIndex) {
     switch (menuItem.text) {
       case 'Remove Party':
@@ -82,7 +92,7 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
           arguments: [partyIndex, party],
         );
         break;
-      case 'Add Attendees':
+      case 'Attendee List':
         Navigator.pushNamed(
           context,
           '/add_attendees',
@@ -93,6 +103,7 @@ class _PartyOverViewPageState extends State<PartyOverViewPage> {
   }
 }
 
+/// partycard, only used in party_overview_page so defined in this class file.
 class PartyCard extends StatefulWidget {
   final Party party;
   final Function handleSelection;
@@ -147,6 +158,7 @@ class _PartyCardState extends State<PartyCard> {
     );
   }
 
+  /// Title and more vert icon
   Column buildTitleWidget(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,6 +197,7 @@ class _PartyCardState extends State<PartyCard> {
     );
   }
 
+  /// Build more_vert items
   List<PopupMenuItem<MenuItem>> _buildItems() {
     return MenuItems.menuList.map(
       (MenuItem menuItem) {
@@ -230,6 +243,7 @@ class _PartyCardState extends State<PartyCard> {
   }
 }
 
+///Menu items for the more_vert menu
 class MenuItem {
   final String text;
   final IconData icon;
@@ -248,7 +262,7 @@ class MenuItems {
   ];
 
   static const itemInvite = MenuItem(
-    text: 'Add Attendees',
+    text: 'Attendee List',
     icon: Icons.people,
   );
 

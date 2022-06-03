@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// declare default styling for the app and default colors. Just theme in
+/// general! Could be more extensive but since the app is quite small
 class Themes {
   ThemeData themeData() {
     return ThemeData(

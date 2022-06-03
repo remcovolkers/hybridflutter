@@ -1,10 +1,11 @@
 import 'contact_model.dart';
 
+///Model to hold a contact list.
 class ContactList {
   List<ContactModel> contacts = [];
 
   /// collector method so we can have 1 entry in the localstorage,
-  /// that entry will be the list of parties instead of unique entries in
+  /// that entry will be the list of contacts instead of unique entries in
   /// localstorage.
   toJsonEncodable() {
     List retVal = contacts.map((contact) {
@@ -14,7 +15,6 @@ class ContactList {
     return retVal;
   }
 
-  ///for readability during debugging, been using alot of print(partyList)
   @override
   String toString() {
     String builder = "";

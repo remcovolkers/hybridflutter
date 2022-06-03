@@ -1,4 +1,3 @@
-import 'package:party_planner_app/storage/local_repo.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:flutter/material.dart';
@@ -19,6 +18,7 @@ class PartyPlanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      /// Routes
       routes: {
         '/add_party': (context) => const MyHomePage(
               title: 'Add a party',
@@ -29,7 +29,7 @@ class PartyPlanner extends StatelessWidget {
               render: AddEditPartyPage(),
             ),
         '/add_attendees': (context) => const MyHomePage(
-              title: 'Add Attendees',
+              title: 'Contact List',
               render: AddAttendeesPage(),
             ),
       },
@@ -66,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    /// isOverviewPage to indicate what appbar icons we should show
     bool isOverviewPage = ModalRoute.of(context)?.settings.name == '/';
     return Scaffold(
       appBar: AppBar(
@@ -101,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  /// need permissions to see phone contacts
   Future<void> _askPermissions(String routeName) async {
     PermissionStatus permissionStatus = await _getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
@@ -123,13 +125,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  /// handling invalid permissions will show a snackbar
   void _handleInvalidPermissions(PermissionStatus permissionStatus) {
     if (permissionStatus == PermissionStatus.denied) {
-      final snackBar = SnackBar(content: Text('Access to contact data denied'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      const snackBar = SnackBar(
+        content: Text(
+          'Access to contact data denied',
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        snackBar,
+      );
     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-      final snackBar =
-          SnackBar(content: Text('Contact data not available on device'));
+      const snackBar = SnackBar(
+        content: Text(
+          'Contact data not available on device',
+        ),
+      );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }

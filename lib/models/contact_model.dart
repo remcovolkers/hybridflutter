@@ -1,3 +1,4 @@
+///Simple Class to store contacts as String
 class ContactModel {
   String displayName;
   ContactModel({required this.displayName});

@@ -25,10 +25,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  fonts:
-    - family: apple
-      fonts:
-        - asset: assets/fonts/apple.ttf
 
   
   
